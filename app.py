@@ -1,13 +1,19 @@
+'''
+Course : INFO 6101 Data Science Eningeering with Python
+Project Name: Covid Vaccination Tracker
+Author :
+1 - Adwait Sathe
+2 - Snehal Zagade
+'''
+
+# Importing all the necessary Libraries
 import streamlit as st
 from functions import *
-import altair as alt
-import requests
-from requests.auth import HTTPBasicAuth
-import json
-import re
-import pandas as pd
 
+# Global variables
+input_file = 'covid.csv'
 
+# HomePage styling
 html_temp = """
 <div style="background-color:#800000;padding:1px; border-radius: 30px;">
 <h1><center style= "color:white;">Vaccine Tracker</style></center></h1>
@@ -46,6 +52,13 @@ st.markdown(
     font-weight: bold;
 }
 
+.css-hi6a2p {
+    flex: 1 1 0%;
+    width: 100%;
+    padding: 3rem 1rem 10rem;
+    max-width: 730px;
+}
+
 canvas{
     width:800px !important;
     height:420px !important;
@@ -73,68 +86,69 @@ canvas{
     unsafe_allow_html=True,
 )
 
-
-
+# Button on the sidebar to get Daily Vaccine Data
 get_all_data = st.sidebar.button("Get Daily Vaccine Data")
 
+# Option on sidebar to get statewise monthly data
 state = st.sidebar.selectbox("State wise Vaccination",
-                                   ['Select a State',
-                                    'Arizona',
-                                    'Arkansas',
-                                    'California',
-                                    'Colorado',
-                                    'Connecticut',
-                                    'Florida',
-                                    'Georgia',
-                                    'New Jersey',
-                                     'New York State',
-                                    'Massachusetts'
-                                    ],
-                                   index=0
-                                   )
+                             ['Select a State',
+                              'Arizona',
+                              'Arkansas',
+                              'California',
+                              'Colorado',
+                              'Connecticut',
+                              'Florida',
+                              'Georgia',
+                              'New Jersey',
+                              'New York State',
+                              'Massachusetts'
+                              ],
+                             index=0
+                             )
 
+# Option on sidebar to compare multi state vaccination
 multiselect = st.sidebar.multiselect("State wise Vaccination",
-                                   ['Select a State',
-                                    'Arizona',
-                                    'Arkansas',
-                                    'California',
-                                    'Colorado',
-                                    'Connecticut',
-                                    'Florida',
-                                    'Georgia',
-                                    'New Jersey',
-                                     'New York State',
-                                    'Massachusetts'
-                                    ]
-                                   )
+                                     ['Select a State',
+                                      'Arizona',
+                                      'Arkansas',
+                                      'California',
+                                      'Colorado',
+                                      'Connecticut',
+                                      'Florida',
+                                      'Georgia',
+                                      'New Jersey',
+                                      'New York State',
+                                      'Massachusetts'
+                                      ]
+                                     )
+# Option on sidebar to get live twitter Data
 
 get_tweets_vaccine = st.sidebar.button("Get Real time Tweets for Hashtag #IGotVaccinated")
 
-
+# Call Respective Function Based on Input Selected
 if get_all_data:
-  r = getallData()
-  st.table(r)
+    r = getallData(input_file)
+    st.table(r)
 elif get_tweets_vaccine:
     output_str = getTweets()
     st.write(output_str)
 elif state != 'Select a State':
-    result_bar = byStateandMonth_bar(state)
-    result_line = byStateandMonth_line(state)
+    result_bar = byStateandMonth_bar(state,input_file)
+    result_line = byStateandMonth_line(state,input_file)
     st.bar_chart(result_bar)
     st.line_chart(result_line)
 elif multiselect:
-    state_result = compareState(multiselect)
+    state_result = compareState(multiselect,input_file)
     st.bar_chart(state_result)
 else:
-    total_distributed = calculate_total('total_distributed')
-    total_first_dose = calculate_total('people_vaccinated')
-    total_second_dose = calculate_total('people_fully_vaccinated')
-    total_vaccination = calculate_total('total_vaccinations')
-
-    print(total_distributed, total_first_dose, total_second_dose, total_vaccination)
-
-    st.write(total_distributed, total_first_dose, total_second_dose, total_vaccination)
+    total_distributed = calculate_total('total_distributed',input_file)
+    total_first_dose = calculate_total('people_vaccinated',input_file)
+    total_second_dose = calculate_total('people_fully_vaccinated',input_file)
+    total_vaccination = calculate_total('total_vaccinations',input_file)
 
 
-
-
+    st.subheader("Current Vaccination Count of Overall USA")
+    st.title("Total Distributed:   " + str(int(total_distributed)))
+    st.title("Total Vaccination :" + str(int(total_vaccination)))
+    st.title("Total 1st Dose :" + str(int(total_first_dose)))
+    st.title("Total 2nd Dose : " + str(int(total_second_dose)))
