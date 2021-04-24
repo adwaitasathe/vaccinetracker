@@ -73,6 +73,14 @@ canvas{
     unsafe_allow_html=True,
 )
 
+total_distributed = calculate_total('total_distributed')
+total_first_dose = calculate_total('people_vaccinated')
+total_second_dose = calculate_total('people_fully_vaccinated')
+total_vaccination = calculate_total('total_vaccinations')
+
+print(total_distributed,total_first_dose,total_second_dose,total_vaccination)
+
+st.write(total_distributed,total_first_dose,total_second_dose,total_vaccination)
 
 get_all_data = st.sidebar.button("Get Daily Vaccine Data")
 
@@ -108,9 +116,6 @@ multiselect = st.sidebar.multiselect("State wise Vaccination",
                                     'Massachusetts'
                                     ]
                                    )
-print("Here ---------------------------------------------------------")
-print(get_all_data,get_tweets_vaccine,state,multiselect)
-print("Here ---------------------------------------------------------")
 
 if get_all_data:
   r = getallData()

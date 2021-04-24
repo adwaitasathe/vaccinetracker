@@ -11,8 +11,15 @@ def clean_data(input_df):
     input_df[['people_vaccinated', 'people_fully_vaccinated']] = input_df[['people_vaccinated', 'people_fully_vaccinated']].astype(int)
     return input_df
 
-def getallData():
+def calculate_total(input_field):
+    input_df = read_data()
+    total = input_df[input_field].sum()
+    print(total)
+    return total
 
+calculate_total('total_vaccinations')
+
+def getallData():
     input_df = read_data()
     clean_df = clean_data(input_df)
     clean_df = clean_df[['date','location','people_vaccinated','people_fully_vaccinated']]
@@ -84,4 +91,4 @@ def getTweets():
         output = output + item['text']
     print(output)
     return output
-getTweets()
+#getTweets()
