@@ -1,5 +1,6 @@
 import streamlit as st
 from functions import *
+import altair as alt
 import requests
 from requests.auth import HTTPBasicAuth
 import json
@@ -8,76 +9,75 @@ import pandas as pd
 
 ## Title header
 html_temp = """
-<div style="background-color:lightgreen;padding:1px;">
-<h1><center> Vaccine Tracker</center></h1>
+<div style="background-color:#800000;padding:1px; border-radius: 30px;">
+<h1><center style= "color:white;">Vaccine Tracker</style></center></h1>
 </div>
 """
-
 st.markdown(html_temp, unsafe_allow_html=True)
 st.write('')
 st.markdown(
     """
 <style>
+.css-1l02zno {
+    background-color:#800000;
+    background-attachment: fixed;
+    flex-shrink: 0;
+    height: 100vh;
+    color:black;
+    overflow: auto;
+    padding: 5rem 1rem;
+    position: relative;
+    transition: margin-left 300ms ease 0s, box-shadow 300ms ease 0s;
+    width: 21rem;
+    z-index: 100;
+    margin-left: 0px;
+}
+.css-145kmo2 {
+    font-size: 1rem;
+    color: white;
+    margin-bottom: 0.4rem;
+}
+.css-1vbb94r {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+    border-radius: 30px;
+    background-color: white;
+    font-weight: bold;
+}
+
+canvas{
+    width:800px !important;
+    height:420px !important;
+}
+
+.css-1wrcr25 {
+    display: flex;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    place-content: flex-start;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    position: absolute;
+    inset: 0px;
+    overflow: hidden;
+    background: url("http://stories.uh.edu/covid-19/assets/ag2dSlL11z/covidbackground05-2560x1440.jpeg") repeat 0 0;
+}
 .sidebar .sidebar-content {
     background-image: linear-gradient(#2e7bcf,#2e7bcf);
     color: white;
-}body{background-color: lightgreen;}
+}body{background-color: lightgreen;
+    font-family: "Times New Roman", Times, serif}
 </style>
 """,
     unsafe_allow_html=True,
 )
 
 
-tt = st.sidebar.button("Get Daily Vaccine Data")
+get_all_data = st.sidebar.button("Get Daily Vaccine Data")
 
-if tt:
-  r = getallData()
-  st.table(r)
+get_tweets_vaccine = st.sidebar.button("Get Real time Tweets for Hashtag #IGotVaccinated")
 
-# if st.sidebar.button('Generate Token'):
-#     headers = {'Content-Type': 'application/x-www-form-urlencoded', }
-#     params = (('grant_type', 'client_credentials'),)
-#     response = requests.post('https://team5-csye7245.auth.us-east-1.amazoncognito.com/oauth2/token', headers=headers,
-#                              params=params,
-#                              auth=('114525gkm76uvtvgtqlu91mlus', 'mp1s243oodd3vhba68du8ogj2onbd4qmjr4ok20g2trgnjmqib3'))
-#
-#     st.write("Access Token: ", re.split("\"", response.text)[3])
-#     st.write("Token generated")
-#     ## Set access token
-#     access_token = re.split("\"", response.text)[3]
-
-## define URL
-# url1 = "https://i4q6ts5eic.execute-api.us-east-1.amazonaws.com/team_5_134/api-1"
-# url2 = "https://i4q6ts5eic.execute-api.us-east-1.amazonaws.com/team_5_134/api-2"
-# url3 = "https://i4q6ts5eic.execute-api.us-east-1.amazonaws.com/team_5_134/api-3"
-# # st.write("AccessToken: ",access_token)
-# headers = {'Accept': 'application/json',
-#            'Authorization': 'eyJraWQiOiJIZzJDZDdYRzFFc3FQaWltU1NjcjRqUXBZcHVUXC81MTNpc3V4VW9DOUNWUT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMTQ1MjVna203NnV2dHZndHFsdTkxbWx1cyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoidGVhbTUtY3N5ZTcyNDUtc2VydmVyLWlkXC9sYW1iZGEtaW52b2tlIiwiYXV0aF90aW1lIjoxNjE4NTk4OTYxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9mRFFoVTBKaWEiLCJleHAiOjE2MTg2ODUzNjEsImlhdCI6MTYxODU5ODk2MSwidmVyc2lvbiI6MiwianRpIjoiZWEwNzYyNTAtMzRiNC00ZWNiLWJhMmQtM2ViMmVmMmM5NzA3IiwiY2xpZW50X2lkIjoiMTE0NTI1Z2ttNzZ1dnR2Z3RxbHU5MW1sdXMifQ.dpFAVRdPLkgfv72I_3IILrkX4ctNSPjYGLv4m8aduvSs3wl8aKXtSzsC0uJz1twV7f-f5jL_8CNSLt3YWutRPAkAB4nEBZFQUlpiGB_XBmdLPKLaWvRbhDQrcAATV43sw0V64Z3zH7fHfAn6Lsz0aROj1GZQlM548pCWUWdNnzrQpyWBlwI0xHgeOnyGYd6b2qs7SfHLRuDvi2Gkj9YDxMDxdnL05NayUEovty9M8YkiuAunll6JDJ9O8Cy4ylOpEMfodYL7C6bjADb7YKEVJLJSLYkKZ98dhoCZZ2wf0ad-4EzyPNJzgczWIN5MMT1ChElECEc4JlbATUZj-UV6gw'}
-#
-
-
-
-# bb = st.sidebar.checkbox("Select month", ['Jan','Feb','Mar'])
-#
-# ## select companies
-# # month = st.sidebar.checkbox("Select Month:",
-#                                ['Select Month',
-#                                 'Jan',
-#                                 'Feb',
-# 'Mar',
-# 'Apr',
-# 'May',
-# 'Jun',
-# 'July',
-# 'Aug',
-# 'Sept',
-# 'Nov',
-# 'Dec'
-#
-#                                 ]
-#                                )
-
-## select encryption
 state = st.sidebar.selectbox("State wise Vaccination",
                                    ['Select a State',
                                     'Arizona',
@@ -94,40 +94,36 @@ state = st.sidebar.selectbox("State wise Vaccination",
                                    index=0
                                    )
 
-result = byStateandMonth(state)
-st.bar_chart
+multiselect = st.sidebar.multiselect("State wise Vaccination",
+                                   ['Select a State',
+                                    'Arizona',
+                                    'Arkansas',
+                                    'California',
+                                    'Colorado',
+                                    'Connecticut',
+                                    'Florida',
+                                    'Georgia',
+                                    'New Jersey',
+                                     'New York State',
+                                    'Massachusetts'
+                                    ]
+                                   )
+print("Here ---------------------------------------------------------")
+print(get_all_data,get_tweets_vaccine,state,multiselect)
+print("Here ---------------------------------------------------------")
 
-# if 'Select' in company:
-#     st.write('Please select a company.')
-# else:
-#     if encryption == 'Raw data':
-#         st.write('API1 Raw Data')
-#         st.write('The selected company: ' + company)
-#         params = {"tag": company}
-#         req = requests.get(url1, headers=headers, params=params)
-#         j = json.loads(req.text)
-#         st.write(json.dumps(j))
-#     elif encryption == 'Anonymized':
-#         st.write('API2 Anonymized Data')
-#         st.write('The selected company: ' + company)
-#         params = {"tag": company}
-#         req = requests.get(url2, headers=headers, params=params)
-#         j = json.loads(req.text)
-#         st.write(json.dumps(j))
-#     elif encryption == 'Masked':
-#         st.write('API3 Masked Data')
-#         params = {"inputUri": 's3://edgardataset/raw_layer/AGEN/', "outputUri": 's3://edgardataset/masked/'}
-#         req = requests.get(url3, headers=headers, params=params)
-#         j = json.loads(req.text)
-#         st.write(json.dumps(j))
-#     else:
-#         st.write('Please select a level of encryption.')
+if get_all_data:
+  r = getallData()
+  st.table(r)
+if get_tweets_vaccine:
+    output_str = getTweets()
+    st.write(output_str)
+if state != 'Select a State':
+    result_bar = byStateandMonth_bar(state)
+    result_line = byStateandMonth_line(state)
+    st.bar_chart(result_bar)
+    st.line_chart(result_line)
+if multiselect:
+    state_result = compareState(multiselect)
+    st.bar_chart(state_result)
 
-## Load sentiment Analysis file
-# sent = pd.read_csv(r'C:\Users\Win10\Downloads\_data.csv', header=None, names=['Text', 'Sentiment_Score'])
-# sent.Sentiment_Score = [t.replace('[', '') for t in sent.Sentiment_Score]
-# sent.Sentiment_Score = [t.replace(']', '') for t in sent.Sentiment_Score]
-# sent.Sentiment_Score = sent.Sentiment_Score.astype(float)
-# sent['sentiment'] = ['Positive' if t >= 0.6 else 'Neutral' if 0.3 < t < 0.6 else 'Negative' for t in
-#                      sent.Sentiment_Score]
-# st.write(sent)
