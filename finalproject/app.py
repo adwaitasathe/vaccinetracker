@@ -7,7 +7,7 @@ import json
 import re
 import pandas as pd
 
-## Title header
+
 html_temp = """
 <div style="background-color:#800000;padding:1px; border-radius: 30px;">
 <h1><center style= "color:white;">Vaccine Tracker</style></center></h1>
@@ -73,18 +73,9 @@ canvas{
     unsafe_allow_html=True,
 )
 
-total_distributed = calculate_total('total_distributed')
-total_first_dose = calculate_total('people_vaccinated')
-total_second_dose = calculate_total('people_fully_vaccinated')
-total_vaccination = calculate_total('total_vaccinations')
 
-print(total_distributed,total_first_dose,total_second_dose,total_vaccination)
-
-st.write(total_distributed,total_first_dose,total_second_dose,total_vaccination)
 
 get_all_data = st.sidebar.button("Get Daily Vaccine Data")
-
-get_tweets_vaccine = st.sidebar.button("Get Real time Tweets for Hashtag #IGotVaccinated")
 
 state = st.sidebar.selectbox("State wise Vaccination",
                                    ['Select a State',
@@ -117,18 +108,33 @@ multiselect = st.sidebar.multiselect("State wise Vaccination",
                                     ]
                                    )
 
+get_tweets_vaccine = st.sidebar.button("Get Real time Tweets for Hashtag #IGotVaccinated")
+
+
 if get_all_data:
   r = getallData()
   st.table(r)
-if get_tweets_vaccine:
+elif get_tweets_vaccine:
     output_str = getTweets()
     st.write(output_str)
-if state != 'Select a State':
+elif state != 'Select a State':
     result_bar = byStateandMonth_bar(state)
     result_line = byStateandMonth_line(state)
     st.bar_chart(result_bar)
     st.line_chart(result_line)
-if multiselect:
+elif multiselect:
     state_result = compareState(multiselect)
     st.bar_chart(state_result)
+else:
+    total_distributed = calculate_total('total_distributed')
+    total_first_dose = calculate_total('people_vaccinated')
+    total_second_dose = calculate_total('people_fully_vaccinated')
+    total_vaccination = calculate_total('total_vaccinations')
+
+    print(total_distributed, total_first_dose, total_second_dose, total_vaccination)
+
+    st.write(total_distributed, total_first_dose, total_second_dose, total_vaccination)
+
+
+
 
